@@ -6,7 +6,11 @@ class PropertyBasedTests {
 
     @Property
     boolean absoluteValueOfAllNumbersIsPositive(@ForAll int anInteger) {
-        return Math.abs(anInteger) >= 0;
+        try {
+            return Math.absExact(anInteger) >= 0;
+        } catch (ArithmeticException _) {
+            return anInteger == Integer.MIN_VALUE;
+        }
     }
 
     @Property
@@ -14,7 +18,7 @@ class PropertyBasedTests {
             @ForAll String string1, @ForAll String string2
     ) {
         String conc = string1 + string2;
-        Assertions.assertThat(conc.length()).isGreaterThan(string1.length());
-        Assertions.assertThat(conc.length()).isGreaterThan(string2.length());
+        Assertions.assertThat(conc.length()).isGreaterThanOrEqualTo(string1.length());
+        Assertions.assertThat(conc.length()).isGreaterThanOrEqualTo(string2.length());
     }
 }
